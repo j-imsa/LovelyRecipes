@@ -118,4 +118,56 @@ public class RecipeController {
         logger.info("Retrieve edit recipe by pId: {}", publicId);
         return recipeService.editRecipe(publicId, recipeRequest);
     }
+
+    @GetMapping(
+            path = "/v2",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    @Operation(summary = "Getting recipes from database using pagination")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Return all stored recipes",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "System Default Exception (SDE)",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+    })
+    public ResponseEntity<MyApiResponse> getRecipes(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "25") int size
+    ) {
+        logger.info("Retrieve all recipes by page: {} and limit: {}", page, size);
+        return recipeService.getRecipes(page, size);
+    }
+
+    @GetMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    @Operation(summary = "Searching recipes from database")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Return all stored recipes",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "System Default Exception (SDE)",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+    })
+    public ResponseEntity<MyApiResponse> getRecipes(
+            @RequestParam(value = "consumers", defaultValue = "-1") int consumers,
+            @RequestParam(value = "vegetarian", defaultValue = "false") boolean vegetarian,
+            @RequestParam(value = "include", defaultValue = "") String include,
+            @RequestParam(value = "exclude", defaultValue = "") String exclude,
+            @RequestParam(value = "instructions", defaultValue = "") String instructions
+    ) {
+        logger.info("Retrieve all recipe");
+        return recipeService.searchRecipes(consumers, vegetarian, include, exclude, instructions);
+    }
 }

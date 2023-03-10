@@ -22,6 +22,7 @@ public class RecipeEntity implements Serializable {
     private String title;
     private String instructions;
     private int consumers;
+    private boolean vegetarian;
     @OneToMany(
             mappedBy = "recipeEntity",
             fetch = FetchType.LAZY,

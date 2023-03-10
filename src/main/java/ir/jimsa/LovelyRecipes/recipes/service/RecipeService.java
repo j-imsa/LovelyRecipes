@@ -10,4 +10,8 @@ public interface RecipeService {
     ResponseEntity<MyApiResponse> deleteRecipe(String publicId);
 
     ResponseEntity<MyApiResponse> editRecipe(String publicId, RecipeRequest recipeRequest);
+
+    ResponseEntity<MyApiResponse> getRecipes(int page, int size);
+
+    ResponseEntity<MyApiResponse> searchRecipes(int consumers, boolean vegetarian, String include, String exclude, String instructions);
 }

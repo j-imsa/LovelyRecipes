@@ -19,4 +19,5 @@ public class RecipeResponse {
     private List<String> ingredients;
     private String instructions;
     private int consumers;
+    private boolean vegetarian;
 }

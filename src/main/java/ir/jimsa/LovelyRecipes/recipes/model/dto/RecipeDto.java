@@ -20,4 +20,5 @@ public class RecipeDto implements Serializable {
     private List<IngredientDto> ingredients;
     private String instructions;
     private int consumers;
+    private boolean vegetarian;
 }
