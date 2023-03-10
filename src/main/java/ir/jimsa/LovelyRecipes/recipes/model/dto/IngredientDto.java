@@ -15,4 +15,5 @@ public class IngredientDto implements Serializable {
     private long id;
     private String publicId;
     private String title;
+    private RecipeDto recipeDto;
 }

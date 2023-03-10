@@ -1,8 +1,10 @@
 package ir.jimsa.LovelyRecipes.recipes.util;
 
+import ir.jimsa.LovelyRecipes.recipes.model.dto.IngredientDto;
 import ir.jimsa.LovelyRecipes.recipes.model.dto.RecipeDto;
 import ir.jimsa.LovelyRecipes.recipes.model.request.RecipeRequest;
 import ir.jimsa.LovelyRecipes.recipes.model.response.RecipeResponse;
+import ir.jimsa.LovelyRecipes.recipes.repository.entity.IngredientEntity;
 import ir.jimsa.LovelyRecipes.recipes.repository.entity.RecipeEntity;
 import ir.jimsa.LovelyRecipes.shared.MyApiResponse;
 import ir.jimsa.LovelyRecipes.shared.Utils;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class RecipeUtil {
@@ -35,6 +38,17 @@ public class RecipeUtil {
     private RecipeDto createDtoModel(RecipeRequest recipeRequest) {
         RecipeDto recipeDto = modelMapper.map(recipeRequest, RecipeDto.class);
         recipeDto.setPublicId(utils.getPublicId());
+        recipeDto.setIngredients(
+                recipeRequest.getIngredients().stream()
+                        .map(s -> {
+                            IngredientDto ingredientDto = new IngredientDto();
+                            ingredientDto.setTitle(s);
+                            ingredientDto.setPublicId(utils.getPublicId());
+                            ingredientDto.setRecipeDto(recipeDto);
+                            return ingredientDto;
+                        })
+                        .collect(Collectors.toList())
+        );
         return recipeDto;
     }
 
@@ -51,11 +65,21 @@ public class RecipeUtil {
     }
 
     public RecipeEntity convert(RecipeDto recipeDto) {
-        return modelMapper.map(recipeDto, RecipeEntity.class);
+        RecipeEntity recipeEntity = modelMapper.map(recipeDto, RecipeEntity.class);
+        for (IngredientEntity ingredientEntity : recipeEntity.getIngredients()) {
+            ingredientEntity.setRecipeEntity(recipeEntity);
+        }
+        return recipeEntity;
     }
 
     public RecipeResponse convert(RecipeEntity recipeEntity) {
-        return modelMapper.map(recipeEntity, RecipeResponse.class);
+        RecipeResponse recipeResponse = modelMapper.map(recipeEntity, RecipeResponse.class);
+        recipeResponse.setIngredients(
+                recipeEntity.getIngredients().stream()
+                        .map(ingredientEntity -> ingredientEntity.getTitle())
+                        .collect(Collectors.toList())
+        );
+        return recipeResponse;
     }
 
     public ResponseEntity<MyApiResponse> createResponse(RecipeResponse recipeResponse, HttpStatus httpStatus) {
