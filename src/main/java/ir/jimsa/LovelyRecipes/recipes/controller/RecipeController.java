@@ -83,4 +83,39 @@ public class RecipeController {
         logger.info("Retrieve delete recipe by pId: {}", publicId);
         return recipeService.deleteRecipe(publicId);
     }
+
+    @PutMapping(
+            path = "/{publicId}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    @Operation(summary = "Updating the information of a recipe on database")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully has updated",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "When could not found the recipe",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "When the input be an invalid, or unprocessable",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "System Default Exception (SDE)",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+    })
+    public ResponseEntity<MyApiResponse> editRecipe(
+            @PathVariable String publicId,
+            @RequestBody RecipeRequest recipeRequest) {
+        logger.info("Retrieve edit recipe by pId: {}", publicId);
+        return recipeService.editRecipe(publicId, recipeRequest);
+    }
 }

@@ -70,6 +70,26 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeUtil.createResponse(null, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<MyApiResponse> editRecipe(String publicId, RecipeRequest recipeRequest) {
+        RecipeEntity existedRecipeEntity = recipeRepository.findByPublicId(publicId);
+        if (existedRecipeEntity == null) {
+            throw new SystemServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage(), HttpStatus.NOT_FOUND);
+        }
+        RecipeEntity updateRecipeEntity;
+        updateRecipeEntity = recipeUtil.update(existedRecipeEntity, recipeRequest);
+        if (updateRecipeEntity == null) {
+            throw new SystemServiceException(ErrorMessages.INVALID_INPUT_VALUE.getErrorMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        try {
+            updateRecipeEntity = recipeRepository.save(updateRecipeEntity);
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+            throw new SystemServiceException(ErrorMessages.DATABASE_IO_EXCEPTION.getErrorMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return recipeUtil.createResponse(recipeUtil.convert(updateRecipeEntity), HttpStatus.OK);
+    }
+
 
 }
 

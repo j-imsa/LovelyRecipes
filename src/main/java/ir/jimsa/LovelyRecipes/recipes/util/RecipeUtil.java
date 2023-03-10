@@ -90,4 +90,15 @@ public class RecipeUtil {
         apiResponse.setResult(recipeResponse);
         return new ResponseEntity<>(apiResponse, httpStatus);
     }
+
+    public RecipeEntity update(RecipeEntity existedRecipeEntity, RecipeRequest recipeRequest) {
+        if (isValidRequestModel(recipeRequest)) {
+            existedRecipeEntity.setTitle(recipeRequest.getTitle());
+            existedRecipeEntity.setInstructions(recipeRequest.getInstructions());
+            existedRecipeEntity.setConsumers(recipeRequest.getConsumers());
+            // what do you want to update? ingredients? ...
+            return existedRecipeEntity;
+        }
+        return null;
+    }
 }

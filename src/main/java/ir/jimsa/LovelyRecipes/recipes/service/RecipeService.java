@@ -8,4 +8,6 @@ public interface RecipeService {
     ResponseEntity<MyApiResponse> createNewRecipe(RecipeRequest recipeRequest);
 
     ResponseEntity<MyApiResponse> deleteRecipe(String publicId);
+
+    ResponseEntity<MyApiResponse> editRecipe(String publicId, RecipeRequest recipeRequest);
 }
