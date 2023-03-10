@@ -1,5 +1,6 @@
 package ir.jimsa.LovelyRecipes.shared;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Setter
 @Getter
+@Schema(name = "Response", description = "Api Response Model")
 public class MyApiResponse {
     private boolean action;
     private String message;
