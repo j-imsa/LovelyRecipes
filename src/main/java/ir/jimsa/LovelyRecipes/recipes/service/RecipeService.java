@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface RecipeService {
     ResponseEntity<MyApiResponse> createNewRecipe(RecipeRequest recipeRequest);
+
+    ResponseEntity<MyApiResponse> deleteRecipe(String publicId);
 }

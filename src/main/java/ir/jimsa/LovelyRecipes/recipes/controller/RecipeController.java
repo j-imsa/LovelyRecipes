@@ -57,4 +57,30 @@ public class RecipeController {
         return recipeService.createNewRecipe(recipeRequest);
     }
 
+    @DeleteMapping(
+            path = "/{publicId}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    @Operation(summary = "Removing a recipe from database")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully has deleted",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "When could not found the recipe",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "System Default Exception (SDE)",
+                    content = {@Content(mediaType = "application/json"), @Content(mediaType = "application/xml")}
+            ),
+    })
+    public ResponseEntity<MyApiResponse> deleteRecipe(@PathVariable String publicId) {
+        logger.info("Retrieve delete recipe by pId: {}", publicId);
+        return recipeService.deleteRecipe(publicId);
+    }
 }

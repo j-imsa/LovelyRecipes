@@ -5,4 +5,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface RecipeRepository extends PagingAndSortingRepository<RecipeEntity, Long> {
     RecipeEntity findByTitle(String title);
+    RecipeEntity findByPublicId(String publicId);
 }

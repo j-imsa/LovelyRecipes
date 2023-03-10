@@ -3,6 +3,7 @@ package ir.jimsa.LovelyRecipes.recipes.service.impl;
 import ir.jimsa.LovelyRecipes.config.exception.SystemServiceException;
 import ir.jimsa.LovelyRecipes.recipes.model.dto.RecipeDto;
 import ir.jimsa.LovelyRecipes.recipes.model.request.RecipeRequest;
+import ir.jimsa.LovelyRecipes.recipes.model.response.RecipeResponse;
 import ir.jimsa.LovelyRecipes.recipes.repository.RecipeRepository;
 import ir.jimsa.LovelyRecipes.recipes.repository.entity.RecipeEntity;
 import ir.jimsa.LovelyRecipes.recipes.service.RecipeService;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -50,6 +53,21 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         return recipeUtil.createResponse(recipeUtil.convert(storedRecipeEntity), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<MyApiResponse> deleteRecipe(String publicId) {
+        RecipeEntity existedRecipeEntity = recipeRepository.findByPublicId(publicId);
+        if (existedRecipeEntity == null) {
+            throw new SystemServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage(), HttpStatus.NOT_FOUND);
+        }
+        try {
+            recipeRepository.delete(existedRecipeEntity);
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+            throw new SystemServiceException(ErrorMessages.DATABASE_IO_EXCEPTION.getErrorMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return recipeUtil.createResponse(null, HttpStatus.OK);
     }
 
 
