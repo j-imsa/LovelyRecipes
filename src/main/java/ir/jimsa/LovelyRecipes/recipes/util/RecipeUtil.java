@@ -8,6 +8,9 @@ import ir.jimsa.LovelyRecipes.recipes.repository.entity.IngredientEntity;
 import ir.jimsa.LovelyRecipes.recipes.repository.entity.RecipeEntity;
 import ir.jimsa.LovelyRecipes.shared.MyApiResponse;
 import ir.jimsa.LovelyRecipes.shared.Utils;
+
+import java.util.Collections;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,11 +60,23 @@ public class RecipeUtil {
         if (recipeRequest.getTitle().isEmpty()) {
             return false;
         }
-        // All check and validation systems ...
+        if (recipeRequest.getInstructions().isEmpty()) {
+            return false;
+        }
+        // As the assignment had told me codes must be production-ready, I think more than 16 is unnatural
+        if (recipeRequest.getConsumers() <= 0 || recipeRequest.getConsumers() >= 17) {
+            return false;
+        }
+        if (recipeRequest.getIngredients() == null || recipeRequest.getIngredients().isEmpty()) {
+            return false;
+        }
         return flag;
     }
 
     public RecipeEntity convert(RecipeDto recipeDto) {
+        if (recipeDto == null || recipeDto.getIngredients() == null) {
+            return null;
+        }
         RecipeEntity recipeEntity = modelMapper.map(recipeDto, RecipeEntity.class);
         for (IngredientEntity ingredientEntity : recipeEntity.getIngredients()) {
             ingredientEntity.setRecipeEntity(recipeEntity);
@@ -70,12 +85,18 @@ public class RecipeUtil {
     }
 
     public RecipeResponse convert(RecipeEntity recipeEntity) {
+        if (recipeEntity == null || recipeEntity.getIngredients() == null) {
+            return null;
+        }
         RecipeResponse recipeResponse = modelMapper.map(recipeEntity, RecipeResponse.class);
-        recipeResponse.setIngredients(recipeEntity.getIngredients().stream().map(ingredientEntity -> ingredientEntity.getTitle()).collect(Collectors.toList()));
+        recipeResponse.setIngredients(recipeEntity.getIngredients().stream().map(IngredientEntity::getTitle).collect(Collectors.toList()));
         return recipeResponse;
     }
 
     public ResponseEntity<MyApiResponse> createResponse(Object recipeResponse, HttpStatus httpStatus) {
+        if (recipeResponse == null || httpStatus == null) {
+            return null;
+        }
         MyApiResponse apiResponse = new MyApiResponse();
         apiResponse.setAction(true);
         apiResponse.setMessage("");
@@ -85,10 +106,11 @@ public class RecipeUtil {
     }
 
     public RecipeEntity update(RecipeEntity existedRecipeEntity, RecipeRequest recipeRequest) {
-        if (isValidRequestModel(recipeRequest)) {
+        if (existedRecipeEntity != null && isValidRequestModel(recipeRequest)) {
             existedRecipeEntity.setTitle(recipeRequest.getTitle());
             existedRecipeEntity.setInstructions(recipeRequest.getInstructions());
             existedRecipeEntity.setConsumers(recipeRequest.getConsumers());
+            existedRecipeEntity.setVegetarian(recipeRequest.isVegetarian());
             // what do you want to update? ingredients? ...
             return existedRecipeEntity;
         }
@@ -96,6 +118,9 @@ public class RecipeUtil {
     }
 
     public List<RecipeResponse> convert(List<RecipeEntity> recipeEntities) {
-        return recipeEntities.stream().map(recipeEntity -> convert(recipeEntity)).collect(Collectors.toList());
+        if (recipeEntities == null) {
+            return Collections.emptyList();
+        }
+        return recipeEntities.stream().map(this::convert).collect(Collectors.toList());
     }
 }

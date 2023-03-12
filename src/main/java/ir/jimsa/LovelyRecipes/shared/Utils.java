@@ -26,6 +26,7 @@ public class Utils {
     }
 
     public String getPublicId() {
+        // idea: creating public method as a wrapper to make it testable
         return generateRandomString();
     }
 

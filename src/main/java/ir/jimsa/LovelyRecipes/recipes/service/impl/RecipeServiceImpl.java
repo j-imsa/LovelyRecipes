@@ -3,7 +3,6 @@ package ir.jimsa.LovelyRecipes.recipes.service.impl;
 import ir.jimsa.LovelyRecipes.config.exception.SystemServiceException;
 import ir.jimsa.LovelyRecipes.recipes.model.dto.RecipeDto;
 import ir.jimsa.LovelyRecipes.recipes.model.request.RecipeRequest;
-import ir.jimsa.LovelyRecipes.recipes.model.response.RecipeResponse;
 import ir.jimsa.LovelyRecipes.recipes.repository.RecipeRepository;
 import ir.jimsa.LovelyRecipes.recipes.repository.entity.RecipeEntity;
 import ir.jimsa.LovelyRecipes.recipes.service.RecipeService;
@@ -11,7 +10,6 @@ import ir.jimsa.LovelyRecipes.recipes.util.RecipeUtil;
 import ir.jimsa.LovelyRecipes.shared.Constants;
 import ir.jimsa.LovelyRecipes.shared.ErrorMessages;
 import ir.jimsa.LovelyRecipes.shared.MyApiResponse;
-import ir.jimsa.LovelyRecipes.shared.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,7 +116,7 @@ public class RecipeServiceImpl implements RecipeService {
             recipeEntities = recipeRepository.findAllByConsumers(consumers);
         }
 
-        // server: include and exclude from ingredients, and instruction in instructions
+        // server: include and exclude from ingredients, and contain an instruction in instructions
         if (!include.isEmpty()) {
             recipeEntities = recipeEntities.stream()
                     .filter(recipeEntity ->
