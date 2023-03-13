@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,7 @@ public class RecipeServiceImpl implements RecipeService {
             logger.error(exception.getMessage());
             throw new SystemServiceException(ErrorMessages.DATABASE_IO_EXCEPTION.getErrorMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return recipeUtil.createResponse(null, HttpStatus.OK);
+        return recipeUtil.createResponse(new ArrayList<>(), HttpStatus.OK);
     }
 
     @Override
