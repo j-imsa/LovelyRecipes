@@ -56,3 +56,61 @@ curl --location 'localhost:8090/recipes' \
 }
 ```
 
+
+#### Get recipes request:
+
+> Get Pageable (by page and size) (*optional)
+
+```console
+curl --location 'localhost:8090/recipes/v2?page=1&size=5'
+```
+
+> Get by filters:
+
+   - consumers: for how many people?
+   - vegetarian: is it good for vegetarians?
+   - include and exclude: what we need to include or exclude from ingredients
+   - instructions: what we need to be contained in instructions
+   - MORE INFO: visit localhost:8090/doc-ui, objects section
+
+```console
+curl --location 'localhost:8090/recipes?consumers=11&vegetarian=true&include=include&exclude=exclude&instructions=instructions'
+```
+
+#### Response:
+
+```json
+{
+   "action": true,
+   "message": "",
+   "date": "2023-03-13T09:33:45.475+00:00",
+   "result": [
+      {
+         "publicId": "qOzI3h84am8dt41PYYVvzEyhKxONQx2M",
+         "title": "Ghormeh",
+         "ingredients": [
+            "A",
+            "B",
+            "C"
+         ],
+         "instructions": "first boil a, than add b and c",
+         "consumers": 2,
+         "vegetarian": false
+      },
+      {
+         "publicId": "OysvpHSUsPG3ir2q03JON4cMKhG4tzP6",
+         "title": "Gheymeh",
+         "ingredients": [
+            "A",
+            "F"
+         ],
+         "instructions": "first boil a, than add f",
+         "consumers": 4,
+         "vegetarian": true
+      }
+   ]
+}
+```
+
+
+> **_NOTE:_**  Delete and Update (PUT, not PATCH) are also available
